@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>Point picker</title>
+    <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+
+    <script type="text/javascript" src="app.js"></script>
+</head>
+
+<body>
+
+<div id="progressBar">
+Progress bar.
+</div>
+<div id="help">
+<ul>
+<li>Click on image to move the closest point to the clicked position</li>
+<li>Use right/left arrow to move forwards/backwards</li>
+</ul>
+</div>
+<div id="workArea" class="viewpane" style="position: relative">
+    <canvas id="imgCanvas" width="800" height="600"
+    style="position: absolute; left: 0; top: 0; z-index: 0;"></canvas>
+    <canvas id="pointsCanvas" width="800" height="600"
+    style="position: absolute; left: 0; top: 0; z-index: 1;"></canvas>
+<!--     <img class="currentImage" width="80%" height="80%" src="data:image/gif;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAAACADs=" alt=""> -->
+</div>
+
+</body>
+
+</html>

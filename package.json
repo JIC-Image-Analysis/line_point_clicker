@@ -1,0 +1,15 @@
+{
+  "name": "line_clicker",
+  "version": "1.0.0",
+  "description": "Tool for selecting two points",
+  "main": "build/index.html",
+  "scripts": {
+    "install": "make"
+  },
+  "author": "Tjelvar Olsson",
+  "license": "ISC",
+  "dependencies": {
+    "@types/jquery": "^2.0.44",
+    "typescript": "^2.3.2"
+  }
+}

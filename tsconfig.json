@@ -1,0 +1,9 @@
+{
+    "compilerOptions": {
+        "out": "build/pre_app.js", 
+        "target": "es5"
+    }, 
+    "files": [
+        "src/app.ts"
+    ]
+}
