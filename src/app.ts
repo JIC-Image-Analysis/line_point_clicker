@@ -12,6 +12,8 @@ let line:MultiPoints = [
 
 let appState:AppState;
 
+let currentPointIndex = 0;
+
 const server = "http://localhost:5000";
 
 class AppState {
@@ -171,17 +173,12 @@ let drawLine = function(line: MultiPoints) {
 
 let movePoint = function(p: Point, line: MultiPoints): MultiPoints {
         console.log("Called movePoint", p);
-        let minDist = 2;
-        let minIndex = 0;
-        for (let i in line) {
-            let dist = distance(p, line[i]);
-            if (dist < minDist) {
-                minDist = dist;
-                minIndex = Number(i);
-            }
+        line[currentPointIndex] = p;
+        if (currentPointIndex == 0) {
+            currentPointIndex = 1;
+        } else {
+            currentPointIndex = 0;
         }
-        console.log(minIndex, minDist);
-        line[minIndex] = p;
         drawLine(line);
         return line;
 }
