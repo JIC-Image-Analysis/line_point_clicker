@@ -5,11 +5,9 @@ interface Point {
 
 interface MultiPoints extends Array<Point>{}
 
-let corners:MultiPoints = [
-    {x: 0, y: 0},
-    {x: 1, y: 0},
-    {x: 0, y: 1},
-    {x: 1, y: 1}
+let line:MultiPoints = [
+    {x: 0.25, y: 0.5},
+    {x: 0.75, y: 0.5}
 ];
 
 let appState:AppState;
@@ -36,25 +34,23 @@ class AppState {
     updateCorners() {
       let getURL = server
                     + "/overlays"
-                    + '/quadrilateral_points/'
+                    + '/line_points/'
                     + this.identifiers[this.currentIndex];
       $.ajax({
           type: 'GET',
           url: getURL,
           success: function(data) {
             console.log(data.length);
-            if (data.length !== 4) {
-                corners = [
-                    {x: 0, y: 0},
-                    {x: 1, y: 0},
-                    {x: 0, y: 1},
-                    {x: 1, y: 1}
+            if (data.length !== 2) {
+                line = [
+                    {x: 0.25, y: 0.5},
+                    {x: 0.75, y: 0.5}
                 ];
             } else {
-                corners = data;
+                line = data;
             }
-            console.log(JSON.stringify(corners));
-            drawCorners(corners);
+            console.log(JSON.stringify(line));
+            drawLine(line);
           },
       });
     }
@@ -64,16 +60,16 @@ class AppState {
         console.log(progress_str);
         document.querySelector("#progressBar").innerHTML = progress_str;
     }
-    persistInOverlay(corners: MultiPoints) {
+    persistInOverlay(line: MultiPoints) {
       let putURL = server
                     + "/overlays"
-                    + '/quadrilateral_points/'
+                    + '/line_points/'
                     + this.identifiers[this.currentIndex];
-      console.log('persistInOverlay', JSON.stringify(corners), putURL);
+      console.log('persistInOverlay', JSON.stringify(line), putURL);
       $.ajax({
           type: 'PUT',
           url: putURL,
-          data: JSON.stringify(corners),
+          data: JSON.stringify(line),
           success: function(data) {
               console.log("Success!");
               appState.currentIndex += 1;
@@ -95,7 +91,7 @@ class AppState {
       });
     }
     next() {
-        this.persistInOverlay(corners);
+        this.persistInOverlay(line);
     }
     prev() {
         if (this.currentIndex > 0) {
@@ -164,30 +160,30 @@ let drawCircle = function(p: Point) {
     ctx.fill();
 }
 
-let drawCorners = function(corners: MultiPoints) {
+let drawLine = function(line: MultiPoints) {
     let c = <HTMLCanvasElement>document.getElementById("pointsCanvas");
     let ctx = c.getContext('2d');
     ctx.clearRect(0, 0, c.width, c.height);
-    for (let c of this.corners) {
+    for (let c of this.line) {
         drawCircle(c);
     }
 }
 
-let moveCorner = function(p: Point, corners: MultiPoints): MultiPoints {
-        console.log("Called Corners update", p);
+let movePoint = function(p: Point, line: MultiPoints): MultiPoints {
+        console.log("Called movePoint", p);
         let minDist = 2;
         let minIndex = 0;
-        for (let i in corners) {
-            let dist = distance(p, corners[i]);
+        for (let i in line) {
+            let dist = distance(p, line[i]);
             if (dist < minDist) {
                 minDist = dist;
                 minIndex = Number(i);
             }
         }
         console.log(minIndex, minDist);
-        corners[minIndex] = p;
-        drawCorners(corners);
-        return corners;
+        line[minIndex] = p;
+        drawLine(line);
+        return line;
 }
 
 let setupCanvas = function() {
@@ -195,7 +191,7 @@ let setupCanvas = function() {
     $("#pointsCanvas").click(function(event) {
         let normCoords:Point = getElementNormCoords(item, event);
         console.log("Clicked: " + JSON.stringify(normCoords));
-        corners = moveCorner(normCoords, corners);
+        line = movePoint(normCoords, line);
     });
 };
 
@@ -215,7 +211,7 @@ let setupKeyBindings = function() {
 let createOverlay = function() {
   let putURL = server
                + "/overlays"
-               + '/quadrilateral_points';
+               + '/line_points';
   console.log('overlay url: ' + putURL);
   $.ajax({
       type: 'PUT',
@@ -235,7 +231,7 @@ let main = function() {
     createOverlay();
     initialiseAppState();
     setupCanvas();
-    drawCorners(corners);
+    drawLine(line);
     setupKeyBindings();
 }
 
