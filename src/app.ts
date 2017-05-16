@@ -158,17 +158,28 @@ let drawCircle = function(p: Point) {
     let ctx = c.getContext('2d');
     ctx.beginPath();
     ctx.arc(p.x * c.width, p.y * c.height, 5, 0, 2*Math.PI);
-    ctx.fillStyle = 'red';
-    ctx.fill();
+    ctx.strokeStyle = "red";
+    ctx.stroke();
 }
 
 let drawLine = function(line: MultiPoints) {
+    let p0:Point = line[0];
+    let p1:Point = line[1];
+
     let c = <HTMLCanvasElement>document.getElementById("pointsCanvas");
     let ctx = c.getContext('2d');
     ctx.clearRect(0, 0, c.width, c.height);
-    for (let c of this.line) {
-        drawCircle(c);
-    }
+
+    ctx.beginPath();
+    ctx.moveTo(p0.x * c.width, p0.y * c.height)
+    ctx.lineTo(p1.x * c.width, p1.y * c.height)
+    ctx.closePath();
+    ctx.strokeStyle = "red";
+    ctx.stroke();
+
+    drawCircle(p0)
+    drawCircle(p1)
+
 }
 
 let movePoint = function(p: Point, line: MultiPoints): MultiPoints {
